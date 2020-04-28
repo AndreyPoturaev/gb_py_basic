@@ -104,6 +104,7 @@ def l6():
 # [{"firm_1": 5000, "firm_2": 3000, "firm_3": 1000}, {"average_profit": 2000}]
 #
 # Подсказка: использовать менеджеры контекста
+import json
 def parse_firm(s):
     props = s.replace('\n', '').split(' ')
     p = [props[1]]
@@ -116,10 +117,16 @@ def l7():
         content = f.readlines()
         firms = dict(map(parse_firm, content))
 
-    avg_rev = {"average_profit": sum(map(lambda x: x[1] - x[2] if x[1]-x[2] > 0 else 0, firms.values())) / len(firms.values())}
-    firms_rev = dict(map(lambda x: (x, abs(firms[x][1] - firms[x][2])), firms))
-    result = [firms_rev, avg_rev]
-    print(result)
+    result = [
+        dict(map(lambda x: (x, abs(firms[x][1] - firms[x][2])), firms)),
+        {
+            "average_profit": sum(map(lambda x: x[1] - x[2] if x[1]-x[2] > 0 else 0, firms.values())) / len(firms.values())
+        }
+    ]
+
+    with open("l7.json", "w") as f:
+        json.dump(result, f)
+
 
 l1()
 l2()
